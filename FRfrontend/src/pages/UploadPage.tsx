@@ -11,7 +11,16 @@ const STORAGE_KEY = 'face-db';
 function loadDataset(): Person[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as any[];
+    // Normalize older format where items used `imageData` to single-image entries
+    const normalized = parsed.map((item) => {
+      if (item.images && Array.isArray(item.images)) return { name: item.name, images: item.images };
+      if (item.imageData) return { name: item.name, images: [item.imageData] };
+      // defensive: ensure images array exists
+      return { name: item.name, images: item.images ?? [] };
+    });
+    return normalized;
   } catch {
     return [];
   }
