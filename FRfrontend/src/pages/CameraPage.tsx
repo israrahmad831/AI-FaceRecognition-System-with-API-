@@ -3,14 +3,14 @@ import * as faceapi from 'face-api.js';
 import './CameraPage.css';
 
 
-type Person = { name: string; imageData: string };
+type Person = { name: string; images: string[] };
 const STORAGE_KEY = 'face-db';
 
 function loadDataset(): Person[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -117,13 +117,22 @@ export default function CameraPage() {
     // use any to avoid missing types
     const labeledDescriptors: any[] = [];
     for (const person of dataset) {
-      const img = await loadImage(person.imageData);
-      const detection = await (faceapi as any)
-        .detectSingleFace(img)
-        .withFaceLandmarks()
-        .withFaceDescriptor();
-      if (!detection) continue;
-      labeledDescriptors.push(new (faceapi as any).LabeledFaceDescriptors(person.name, [detection.descriptor]));
+      const descriptors: any[] = [];
+      for (const imgData of person.images) {
+        try {
+          const img = await loadImage(imgData);
+          const detection = await (faceapi as any)
+            .detectSingleFace(img)
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+          if (detection) descriptors.push(detection.descriptor);
+        } catch {
+          // ignore individual image errors
+        }
+      }
+      if (descriptors.length > 0) {
+        labeledDescriptors.push(new (faceapi as any).LabeledFaceDescriptors(person.name, descriptors));
+      }
     }
     return labeledDescriptors;
   }
