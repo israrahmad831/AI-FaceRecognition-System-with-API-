@@ -24,6 +24,9 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
+# Model binaries (face-api.js weights)
+/public/models/
+
 # Coverage
 coverage/
 

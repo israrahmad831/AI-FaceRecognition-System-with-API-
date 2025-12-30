@@ -1,0 +1,14 @@
+.nav{
+  display:flex;
+  gap:12px;
+  padding:12px;
+  background:#111;
+}
+
+.nav a{
+  color:#fff;
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:6px;
+  background:rgba(255,255,255,0.06);
+}

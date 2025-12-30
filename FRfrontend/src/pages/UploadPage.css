@@ -1,0 +1,6 @@
+.upload-page{padding:16px}
+.upload-form{display:flex;gap:8px;align-items:center}
+.dataset-list{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+.dataset-item{width:160px;border:1px solid #ddd;padding:8px;border-radius:6px}
+.dataset-item img{width:100%;height:120px;object-fit:cover}
+.meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
